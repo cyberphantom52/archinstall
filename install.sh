@@ -16,6 +16,10 @@ PACKAGES="$PACKAGES power-profiles-daemon"
 echo "Added switcheroo-control for switching between dGPU and iGPU . . ."
 PACKAGES="$PACKAGES switcheroo-control"
 
+# Vulkan
+echo "Added vulkan-radeon for Vulkan . . ."
+PACKAGES="$PACKAGES vulkan-radeon vulkan-icd-loader"
+
 # Flatpak
 echo "Added flatpak for installing apps . . ."
 PACKAGES="$PACKAGES flatpak"
