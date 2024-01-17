@@ -6,8 +6,7 @@ echo -e "    * Mountpont=/mnt      Type=Linux Filesystem       Mountpath='/mnt'"
 echo -e "    * Mountpont=/mnt/efi  Type=EFI File System        Mountpath='/efi'"
 echo -e "    * Mountpont=/mnt/boot Type=Linux Extended Boot    Mountpath='/boot'"
 
-if [ $(mountpoint -q /mnt) ] && [ $(mountpoint -q /mnt/efi) ] && [ $(mountpoint -q /mnt/boot) ]
-then
+if mountpoint -q /mnt && mountpoint -q /mnt/efi && mountpoint -q /mnt/boot; then
     echo "All mountpoints are valid."
 else
     echo "One or more mountpoints are invalid."
