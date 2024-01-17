@@ -56,6 +56,10 @@ PACKAGES="$PACKAGES cups cups-pdf"
 echo "Added vim and nano for editing files . . ."
 PACKAGES="$PACKAGES vim nano"
 
+# Git
+echo "Added git for version control . . ."
+PACKAGES="$PACKAGES git"
+
 # Bash Completion
 echo "Added bash-completion and pkgfile for bash completion . . ."
 PACKAGES="$PACKAGES bash-completion pkgfile"
@@ -99,6 +103,12 @@ genfstab -U /mnt >> /mnt/etc/fstab
 # Copy mirrorlist
 echo "Copying mirrorlist . . ."
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
+
+# Setup paru
+echo "Setting up paru . . ."
+arch-chroot /mnt sudo -u phantom git clone https://aur.archlinux.org/paru.git /home/phantom/paru
+arch-chroot /mnt sudo -u phantom bash -c "cd /home/phantom/paru && makepkg -si --noconfirm"
+arch-chroot /mnt sudo -u phantom rm -rf /home/phantom/paru
 
 # Set timezone
 echo "Setting timezone to Asia/Kolkata . . ."
