@@ -120,6 +120,10 @@ echo "Setting timezone to Asia/Kolkata . . ."
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /mnt/etc/localtime
 arch-chroot /mnt hwclock --systoh
 
+# Setup systemd-oomd
+echo "Setting up systemd-oomd . . ."
+arch-chroot /mnt paru -S --noconfirm systemd-oomd-defaults
+
 # Set locale
 echo "Setting locale to en_US.UTF-8 . . ."
 sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
