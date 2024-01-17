@@ -116,13 +116,19 @@ read -sp "Set password for root: " password
 echo -e "\n"
 echo "root:$password" | arch-chroot /mnt chpasswd
 
+# Setup rust
+echo "Setting up rust . . ."
+arch-chroot /mnt pacman -S --noconfirm rustup
+arch-chroot /mnt sudo -u $username rustup default stable
+
 # Setup paru
 echo "Setting up paru . . ."
+arch-chroot /mnt pacman -S --noconfirm --needed base-devel
 arch-chroot /mnt sudo -u $username git clone https://aur.archlinux.org/paru.git /home/$username/paru
 arch-chroot /mnt sudo -u $username bash -c "cd /home/$username/paru && makepkg -si --noconfirm"
 arch-chroot /mnt sudo -u $username rm -rf /home/$username/paru
 
-alias paru="arch-chroot /mnt paru"
+alias paru="arch-chroot /mnt sudo -u $username paru"
 alias pacman="arch-chroot /mnt pacman"
 
 # Setup zram
