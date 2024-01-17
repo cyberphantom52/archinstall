@@ -123,10 +123,13 @@ arch-chroot /mnt sudo -u $username git clone https://aur.archlinux.org/paru.git 
 arch-chroot /mnt sudo -u $username bash -c "cd /home/$username/paru && makepkg -si --noconfirm"
 arch-chroot /mnt sudo -u $username rm -rf /home/$username/paru
 
+alias paru="arch-chroot /mnt paru"
+alias pacman="arch-chroot /mnt pacman"
+
 # Setup zram
 echo "Setting up zram . . ."
-arch-chroot /mnt pacman -S --noconfirm zram-generator
-arch-chroot /mnt paru -S --noconfirm zram-generator-defaults
+pacman -S --noconfirm zram-generator
+paru -S --noconfirm zram-generator-defaults
 
 # Set timezone
 echo "Setting timezone to Asia/Kolkata . . ."
@@ -135,7 +138,7 @@ arch-chroot /mnt hwclock --systoh
 
 # Setup systemd-oomd
 echo "Setting up systemd-oomd . . ."
-arch-chroot /mnt paru -S --noconfirm systemd-oomd-defaults
+paru -S --noconfirm systemd-oomd-defaults
 
 # Set locale
 echo "Setting locale to en_US.UTF-8 . . ."
