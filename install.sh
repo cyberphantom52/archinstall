@@ -131,6 +131,10 @@ arch-chroot /mnt sudo -u $username rm -rf /home/$username/paru
 alias paru="arch-chroot /mnt sudo -u $username paru"
 alias pacman="arch-chroot /mnt pacman"
 
+# Update package database
+pacman -Sy
+arch-chroot /mnt pkgfile -u
+
 # Setup zram
 echo "Setting up zram . . ."
 pacman -S --noconfirm zram-generator
@@ -165,9 +169,6 @@ arch-chroot /mnt mkinitcpio -P
 
 # Enable GDM and NetworkManager
 arch-chroot /mnt systemctl enable gdm NetworkManager
-
-# Setup pkgfile
-arch-chroot /mnt pkgfile -u
 
 # Install systemd-boot
 echo "Installing systemd-boot . . ."
