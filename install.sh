@@ -110,6 +110,11 @@ arch-chroot /mnt sudo -u phantom git clone https://aur.archlinux.org/paru.git /h
 arch-chroot /mnt sudo -u phantom bash -c "cd /home/phantom/paru && makepkg -si --noconfirm"
 arch-chroot /mnt sudo -u phantom rm -rf /home/phantom/paru
 
+# Setup zram
+echo "Setting up zram . . ."
+arch-chroot /mnt pacman -S --noconfirm zram-generator
+arch-chroot /mnt paru -S --noconfirm zram-generator-defaults
+
 # Set timezone
 echo "Setting timezone to Asia/Kolkata . . ."
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /mnt/etc/localtime
