@@ -104,11 +104,24 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "Copying mirrorlist . . ."
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 
+# Setup use account
+echo "Creating a user account . . ."
+sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /mnt/etc/sudoers
+read -p "Enter username: " username
+arch-chroot /mnt useradd -m -G wheel -s /bin/bash $username
+read -sp "Set password for $username: " password
+echo -e "\n"
+echo "$username:$password" | arch-chroot /mnt chpasswd
+
+read -sp "Set password for root: " password
+echo -e "\n"
+echo "root:$password" | arch-chroot /mnt chpasswd
+
 # Setup paru
 echo "Setting up paru . . ."
-arch-chroot /mnt sudo -u phantom git clone https://aur.archlinux.org/paru.git /home/phantom/paru
-arch-chroot /mnt sudo -u phantom bash -c "cd /home/phantom/paru && makepkg -si --noconfirm"
-arch-chroot /mnt sudo -u phantom rm -rf /home/phantom/paru
+arch-chroot /mnt sudo -u $username git clone https://aur.archlinux.org/paru.git /home/$username/paru
+arch-chroot /mnt sudo -u $username bash -c "cd /home/$username/paru && makepkg -si --noconfirm"
+arch-chroot /mnt sudo -u $username rm -rf /home/$username/paru
 
 # Setup zram
 echo "Setting up zram . . ."
@@ -141,23 +154,6 @@ sed -i 's/HOOKS=(\(.*\))/HOOKS=(\1 plymouth)/g' /mnt/etc/mkinitcpio.conf
 # Regenerate initramfs
 echo "Regenerating initramfs . . ."
 arch-chroot /mnt mkinitcpio -P
-
-# Setup sudo
-echo "Setting up sudo . . ."
-sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /mnt/etc/sudoers
-
-# Setup new user
-echo "Setting up new user . . ."
-arch-chroot /mnt useradd -m -G wheel -s /bin/bash phantom
-read -sp "Enter password for phantom: " password
-echo "phantom:$password" | arch-chroot /mnt chpasswd
-
-echo -e "\n\n"
-
-read -sp "Enter password for root: " password
-echo "root:$password" | arch-chroot /mnt chpasswd
-
-echo -e "\n\n"
 
 # Enable GDM and NetworkManager
 arch-chroot /mnt systemctl enable gdm NetworkManager
