@@ -103,69 +103,9 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo "Copying mirrorlist . . ."
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 
-# Setup use account
-echo "Creating a user account . . ."
-sed -i 's/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /mnt/etc/sudoers
-read -p "Enter username: " username
-arch-chroot /mnt useradd -m -G wheel -s /bin/bash $username
-read -sp "Set password for $username: " password
-echo -e "\n"
-echo "$username:$password" | arch-chroot /mnt chpasswd
-
-read -sp "Set password for root: " password
-echo -e "\n"
-echo "root:$password" | arch-chroot /mnt chpasswd
-
-# Setup rust
-echo "Setting up rust . . ."
-arch-chroot /mnt pacman -S --noconfirm rustup
-arch-chroot /mnt sudo -u $username rustup default stable
-
-# Setup paru
-echo "Setting up paru . . ."
-arch-chroot /mnt pacman -S --noconfirm --needed base-devel
-arch-chroot /mnt sudo -u $username git clone https://aur.archlinux.org/paru.git /home/$username/paru
-arch-chroot /mnt sudo -u $username bash -c "cd /home/$username/paru && makepkg -si --noconfirm"
-arch-chroot /mnt sudo -u $username rm -rf /home/$username/paru
-
-alias paru="arch-chroot /mnt sudo -u $username paru"
-alias pacman="arch-chroot /mnt pacman"
-
-# Update package database
-pacman -Sy
-arch-chroot /mnt pkgfile -u
-
-# Setup zram
-echo "Setting up zram . . ."
-pacman -S --noconfirm zram-generator
-paru -S --noconfirm zram-generator-defaults
-
-# Set timezone
-echo "Setting timezone to Asia/Kolkata . . ."
-ln -sf /usr/share/zoneinfo/Asia/Kolkata /mnt/etc/localtime
-arch-chroot /mnt hwclock --systoh
-
-# Setup systemd-oomd
-echo "Setting up systemd-oomd . . ."
-paru -S --noconfirm systemd-oomd-defaults
-
-# Set locale
-echo "Setting locale to en_US.UTF-8 . . ."
-sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /mnt/etc/locale.gen
-arch-chroot /mnt locale-gen
-echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
-
-# Set hostname
-echo "Setting hostname to 'rog' . . ."
-echo "rog" > /mnt/etc/hostname
-
 # Add plymouth to HOOKS
 echo "Adding plymouth to HOOKS . . ."
 sed -i 's/HOOKS=(\(.*\))/HOOKS=(\1 plymouth)/g' /mnt/etc/mkinitcpio.conf
-
-# Regenerate initramfs
-echo "Regenerating initramfs . . ."
-arch-chroot /mnt mkinitcpio -P
 
 # Enable GDM and NetworkManager
 arch-chroot /mnt systemctl enable gdm NetworkManager
