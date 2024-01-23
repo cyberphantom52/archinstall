@@ -85,7 +85,7 @@ PACKAGES="$PACKAGES xdg-desktop-portal xdg-desktop-portal-gnome"
 
 # Minimal GNOME
 echo "Added GNOME . . ."
-PACKAGES="$PACKAGES gdm gnome-shell gnome-keyring polkit-gnome gnome-control-center gnome-terminal gnome-tweaks nautilus gnome-backgrounds gnome-disk-utility gnome-software"
+PACKAGES="$PACKAGES gdm gnome-shell gnome-keyring polkit-gnome gnome-control-center gnome-terminal gnome-tweaks nautilus gnome-backgrounds gnome-disk-utility gnome-software gnome-initial-setup"
 
 echo "Packages to be installed:"
 echo $PACKAGES
