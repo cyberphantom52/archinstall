@@ -13,7 +13,7 @@ else
     exit 1
 fi
 
-PACKAGES="base linux linux-firmware amd-ucode xdg-user-dirs efifs"
+PACKAGES="base linux linux-firmware amd-ucode xdg-user-dirs efifs glibc fwupd"
 
 # Update the mirror list
 echo "Updating mirror list . . ."
